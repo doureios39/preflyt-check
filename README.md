@@ -40,49 +40,44 @@ Preflyt will never block your deploy due to our own errors. Exit code 1 only occ
 | `0` | Scan clean, scan errored, timed out, API unreachable, limit reached, or `--fail` not set |
 | `1` | `--fail` set AND scan succeeded AND findings match `--fail-on` severity |
 
-## Examples
+## Integration
 
-### Bare deploy script
+### AI coding agents (recommended)
+
+Add the skill file to your project and your agent runs a scan after every deploy:
+
+```bash
+curl -o SKILL.md https://preflyt.dev/skill.md
+```
+
+Or tell your agent directly: "After deploying, run `npx preflyt-check <deployed-url>`"
+
+### Git hook (auto-scan on push)
 
 ```bash
 #!/bin/bash
-# deploy.sh
-git push production main
+# .git/hooks/post-receive
+cd /home/myapp
+git checkout -f
+npm run build
+pm2 restart app
+sleep 5
 npx preflyt-check https://mysite.com
-```
-
-### package.json post-deploy
-
-```json
-{
-  "scripts": {
-    "deploy": "vercel --prod",
-    "postdeploy": "npx preflyt-check https://mysite.com"
-  }
-}
 ```
 
 ### GitHub Actions
 
 ```yaml
-- name: Deploy
-  run: npm run deploy
-
-- name: Security check
-  run: npx preflyt-check https://mysite.com --fail --fail-on high
-  env:
-    # Optional: store key in GitHub Secrets
-    PREFLYT_KEY: ${{ secrets.PREFLYT_KEY }}
-  # Only fail on high-severity issues
-```
-
-### GitHub Actions (with Pro key)
-
-```yaml
-- name: Security check
-  run: npx preflyt-check https://mysite.com --key $PREFLYT_KEY --fail
-  env:
-    PREFLYT_KEY: ${{ secrets.PREFLYT_KEY }}
+# .github/workflows/preflyt.yml
+name: Preflyt Scan
+on:
+  deployment_status:
+jobs:
+  scan:
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - run: npx preflyt-check ${{ vars.PRODUCTION_URL }}
 ```
 
 ### Shareable reports
@@ -93,13 +88,7 @@ npx preflyt-check https://mysite.com --share
 
 Generates a public report URL you can share with your team or post anywhere. Reports expire after 30 days.
 
-### Docker
-
-```dockerfile
-RUN npm install -g preflyt-check
-# In your entrypoint or health check:
-CMD ["sh", "-c", "preflyt-check https://mysite.com && node server.js"]
-```
+For detailed setup instructions, see the [integration guide](https://preflyt.dev/integrate).
 
 ## Programmatic usage
 
