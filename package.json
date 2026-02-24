@@ -1,6 +1,6 @@
 {
   "name": "preflyt-check",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Pre-deployment security scanner. Checks your live site for exposed secrets, open ports, and misconfigurations.",
   "bin": {
     "preflyt-check": "./bin/preflyt-check.js"
