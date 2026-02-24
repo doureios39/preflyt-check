@@ -1,0 +1,25 @@
+{
+  "name": "preflyt-check",
+  "version": "1.0.2",
+  "description": "Pre-deployment security scanner. Checks your live site for exposed secrets, open ports, and misconfigurations.",
+  "bin": {
+    "preflyt-check": "./bin/preflyt-check.js"
+  },
+  "main": "src/index.js",
+  "keywords": [
+    "security",
+    "deployment",
+    "scanner",
+    "preflyt",
+    "env",
+    "exposed",
+    "ports"
+  ],
+  "author": "Preflyt",
+  "license": "MIT",
+  "homepage": "https://preflyt.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/doureios39/preflyt-check"
+  }
+}
